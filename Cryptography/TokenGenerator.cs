@@ -100,22 +100,22 @@ namespace AppleAuth.Cryptography
         /// <summary>
         /// Removes empty lines from string; Also removes lines like the following:"-----BEGIN PRIVATE KEY-----"
         /// </summary>
-        public string GetFormattedPrivateKey(string keyString)
+       public string GetFormattedPrivateKey(string keyString)
         {
-            StringBuilder cleanedKey = new StringBuilder();
-            string[] newLineSeparators =  { "\r", "\n", "\r\n" };
+            string[] separators = { "\r\n", "\n", "\r" };
+            var keyLines = keyString.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-            var keyLines = keyString.Split(newLineSeparators, StringSplitOptions.RemoveEmptyEntries);
+            var sb = new StringBuilder();
 
-            for (int i = 0; i < keyLines.Length; i++)
+            foreach (var line in keyLines)
             {
-                if (!keyLines[i].Contains("PRIVATE"))
+                if (!line.Contains("PRIVATE"))
                 {
-                    cleanedKey.Append(keyLines[i]);
+                    sb.Append(line);
                 }
             }
 
-            return cleanedKey.ToString();
+            return sb.ToString();
         }
     }
 }
